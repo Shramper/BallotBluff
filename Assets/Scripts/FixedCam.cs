@@ -28,6 +28,9 @@ public class FixedCam : MonoBehaviour {
 	public GameObject fixedCamGO;
 	private Camera fixedCamera;
 
+	public GameObject newsUIGO;
+	public NewsController newsUIScript;
+
 	public GameObject player;
 	public Player playerScript;
 
@@ -47,6 +50,9 @@ public class FixedCam : MonoBehaviour {
 
 		//Finding Camera to disable
 		fixedCamera = fixedCamGO.GetComponent<Camera>();
+
+		//Finding NewsUI Script
+		newsUIScript = newsUIGO.GetComponent<NewsController>(); //Getting Journal Controller Script
 
 		//Getting Renderers of Newspapers
 		news1ObjRend = news1Obj.GetComponent<Renderer>();
@@ -142,28 +148,61 @@ public class FixedCam : MonoBehaviour {
 
 	public void News1 () {
 		
-			playerScript.newsChosen = true;
+			//playerScript.newsChosen = true;
+
+			if (newsUIScript.isActive == false) {
+				
+				newsUIScript.OpenNews ();
+				
+			} else if (newsUIScript.isActive == true) {
+				
+				newsUIScript.CloseNews ();
+				
+			}
+
 			Debug.Log ("READING NEWSPAPER 1 HELLO");
-			Destroy (news2Obj);
-			Destroy (news3Obj);
+			//Destroy (news2Obj);
+			//Destroy (news3Obj);
 
 	}
 
 	public void News2 () {
 
-		playerScript.newsChosen = true;
+		//playerScript.newsChosen = true;
+
+		if (newsUIScript.isActive == false) {
+
+			newsUIScript.OpenNews ();
+
+		} else if (newsUIScript.isActive == true) {
+
+			newsUIScript.CloseNews ();
+
+		}
+
 		Debug.Log ("READING NEWSPAPER 2 HELLO");
-		Destroy (news1Obj);
-		Destroy (news3Obj);
+		//Destroy (news1Obj);
+		//Destroy (news3Obj);
 
 	}
 
 	public void News3 () {
 
-		playerScript.newsChosen = true;
+		//playerScript.newsChosen = true;
+
+		if (newsUIScript.isActive == false) {
+
+			newsUIScript.OpenNews ();
+
+		} else if (newsUIScript.isActive == true) {
+
+			newsUIScript.CloseNews ();
+
+		}
+
 		Debug.Log ("READING NEWSPAPER 3 HELLO");
-		Destroy (news1Obj);
-		Destroy (news2Obj);
+		//Destroy (news1Obj);
+		//Destroy (news2Obj);
 
 	}
 }

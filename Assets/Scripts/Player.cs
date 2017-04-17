@@ -14,12 +14,14 @@ public class Player : MonoBehaviour {
 	public float verticalRot = 0.0f;
 	public float rotRange = 60.0f;
 
-	[Header("References")]
-	public Flowchart flowchart;
+	[Header("Fixed Camera")]
 	public GameObject fixedCamNode;
 	public FixedCam fixedCamScript;
 	public GameObject fixedCamGO;
 	public Camera fixedCamera;
+
+	[Header("References")]
+	public Flowchart flowchart;
 	public GameObject journalGO;
 	public JournalController journalScript;
 
@@ -88,9 +90,7 @@ public class Player : MonoBehaviour {
 				numNewsObj = 0.0f;
 
 			}
-
-
-
+				
 		}
 
 		//If Main Camera is enabled
@@ -122,16 +122,22 @@ public class Player : MonoBehaviour {
 			//Interact Controls
 			if (Input.GetMouseButtonDown(0)) { //LEFT CLICK to interact
 
+				if (fixedCamScript.newsUIScript.isActive) { //Closing the UI
+
+					Debug.Log ("CLOSE NEWSPAPER");
+					fixedCamScript.newsUIScript.CloseNews ();
+
+				}
+
 				//If Interacting with Still Cam Object - Fixed Camera on an object
 				if (fixedCamScript.interacting == true && playerActive) {
 
-					Debug.Log ("FIXEDCAM INTERACTING");
 					isInteract = true; //If player is currently interacting with something.
 					Cursor.lockState = CursorLockMode.None;
 					Cursor.visible = true;
 
-					fixedCamScript.FixCam ();
-
+					fixedCamScript.FixCam (); //THE CAMERA IS NOW FIXED ON THE NEWSPAPERS
+				
 					if (flowchart.GetFloatVariable ("newsNum") > 0) { //If a Newspaper has already been chosen
 
 						flowchart.ExecuteBlock ("FixedCam_Start"); //****Play a Block that supports chosen newspaper, or skip to a certain block
@@ -141,10 +147,10 @@ public class Player : MonoBehaviour {
 						flowchart.ExecuteBlock ("FixedCam_Start"); //Otherwise, choose Newspaper
 
 					}
-						
+
 				}
 
-				if (isInteract && !flowchart.GetBooleanVariable ("diagActive") && !newsChosen) {
+				if (isInteract && !flowchart.GetBooleanVariable ("diagActive") && !newsChosen) { //Clicking during fixed Camera
 
 					if (numNewsObj == 1.0f) { 
 
@@ -177,12 +183,15 @@ public class Player : MonoBehaviour {
 
 			if (Input.GetMouseButtonDown (1)) { //RIGHT CLICK to stop interacting
 
-				if (fixedCamScript.interacting == true && !playerActive) {
 
+				if (fixedCamScript.interacting == true && !playerActive) {
+						
 					Debug.Log ("Finishing fixed cam");
 					isInteract = false;
 					fixedCamScript.UnfixCam ();
+
 				}
+					
 
 				//Cancel out of Dialogue Box
 
