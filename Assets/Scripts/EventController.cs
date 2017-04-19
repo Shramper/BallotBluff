@@ -8,7 +8,9 @@ public class EventController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		
+
+		eventNum = 0.0f;
+
 	}
 	
 	// Update is called once per frame

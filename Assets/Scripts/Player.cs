@@ -20,10 +20,22 @@ public class Player : MonoBehaviour {
 	public GameObject fixedCamGO;
 	public Camera fixedCamera;
 
+	[Header("NPC")]
+	public GameObject npcGO;
+	public NPC npcScript;
+	public GameObject npcObj;
+
+	[Header("TV")]
+	public GameObject tvGO;
+	public TV tvScript;
+	public GameObject tvObj;
+
 	[Header("References")]
 	public Flowchart flowchart;
 	public GameObject journalGO;
 	public JournalController journalScript;
+	public GameObject evtGO;
+	public EventController evtScript;
 
 	[Header("Variables")]
 	public float numNewsObj;
@@ -43,7 +55,14 @@ public class Player : MonoBehaviour {
 		//Finding the Interactive Objects + Cameras
 		fixedCamScript = fixedCamNode.GetComponent<FixedCam> (); //Getting Fixed Cam Script
 		fixedCamera = fixedCamGO.GetComponent<Camera>(); //Getting Fixed Cam Camera
+
+		npcScript = npcGO.GetComponent<NPC> ();
+
+		tvScript = tvGO.GetComponent<TV> ();
+
 		journalScript = journalGO.GetComponent<JournalController>(); //Getting Journal Controller Script
+
+		evtScript = evtGO.GetComponent<EventController> (); //Getting Event Controller Script
 
 		isInteract = false;
 		playerActive = true;
@@ -59,6 +78,8 @@ public class Player : MonoBehaviour {
 
 			//Debug.Log (flowchart.GetBooleanVariable ("diagActive"));
 			playerActive = false;
+			Cursor.lockState = CursorLockMode.None;
+			Cursor.visible = true;
 
 		} else if (!flowchart.GetBooleanVariable ("diagActive") || isInteract == false) {
 
@@ -122,19 +143,10 @@ public class Player : MonoBehaviour {
 			//Interact Controls
 			if (Input.GetMouseButtonDown(0)) { //LEFT CLICK to interact
 
-				if (fixedCamScript.newsUIScript.isActive) { //Closing the UI
-
-					Debug.Log ("CLOSE NEWSPAPER");
-					fixedCamScript.newsUIScript.CloseNews ();
-
-				}
-
 				//If Interacting with Still Cam Object - Fixed Camera on an object
 				if (fixedCamScript.interacting == true && playerActive) {
 
 					isInteract = true; //If player is currently interacting with something.
-					Cursor.lockState = CursorLockMode.None;
-					Cursor.visible = true;
 
 					fixedCamScript.FixCam (); //THE CAMERA IS NOW FIXED ON THE NEWSPAPERS
 				
@@ -150,7 +162,7 @@ public class Player : MonoBehaviour {
 
 				}
 
-				if (isInteract && !flowchart.GetBooleanVariable ("diagActive") && !newsChosen) { //Clicking during fixed Camera
+				if (isInteract && fixedCamScript.interacting && !flowchart.GetBooleanVariable ("diagActive") && !fixedCamScript.newsUIScript.isActive) { //Clicking during fixed Camera
 
 					if (numNewsObj == 1.0f) { 
 
@@ -171,6 +183,27 @@ public class Player : MonoBehaviour {
 
 				}
 
+				if (npcScript.interacting == true && playerActive && !npcScript.done) {
+
+					isInteract = true;
+					Cursor.lockState = CursorLockMode.None;
+					Cursor.visible = true;
+
+					npcScript.NPCInteract ();
+					flowchart.ExecuteBlock ("NPC_Start");
+
+				}
+
+				if (tvScript.interacting == true && playerActive && !tvScript.done) {
+
+					isInteract = true;
+					Cursor.lockState = CursorLockMode.None;
+					Cursor.visible = true;
+
+					tvScript.TVInteract ();
+
+				}
+
 
 				//If Interacting with Dialogue Object - Dialogue over screen
 
@@ -183,15 +216,31 @@ public class Player : MonoBehaviour {
 
 			if (Input.GetMouseButtonDown (1)) { //RIGHT CLICK to stop interacting
 
+				if (fixedCamScript.newsUIScript.isActive) { //Closing the UI
 
-				if (fixedCamScript.interacting == true && !playerActive) {
-						
-					Debug.Log ("Finishing fixed cam");
+					Debug.Log ("CLOSE NEWSPAPER");
+					fixedCamScript.newsUIScript.CloseNews ();
 					isInteract = false;
 					fixedCamScript.UnfixCam ();
 
+				} else {
+
+					if (fixedCamScript.interacting == true && !playerActive && !flowchart.GetBooleanVariable("NewsDone")) {
+
+						Debug.Log ("Finishing fixed cam");
+						fixedCamScript.UnfixCam ();
+
+					}
+
+					if (npcScript.interacting == true && !playerActive) {
+
+						Debug.Log ("Finishing NPC");
+						npcScript.NPCQuit ();
+
+
+					}
+
 				}
-					
 
 				//Cancel out of Dialogue Box
 

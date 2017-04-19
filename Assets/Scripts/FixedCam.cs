@@ -35,6 +35,7 @@ public class FixedCam : MonoBehaviour {
 	public Player playerScript;
 
 	public bool interacting;
+	public bool done;
 
 	public Flowchart flowchart;
 
@@ -68,25 +69,25 @@ public class FixedCam : MonoBehaviour {
 		if (fixedCamera.enabled) {
 
 			//If Player is interacting with newspapers
-			if (playerScript.numNewsObj == 0.0f && playerScript.isInteract && !playerScript.newsChosen) {
+			if (playerScript.numNewsObj == 0.0f && playerScript.isInteract) {
 
 				news1ObjRend.material = news1ObjMAT;
 				news2ObjRend.material = news2ObjMAT;
 				news3ObjRend.material = news3ObjMAT;
 
-			} else if (playerScript.numNewsObj == 1.0f && playerScript.isInteract && !playerScript.newsChosen) {
+			} else if (playerScript.numNewsObj == 1.0f && playerScript.isInteract) {
 
 				news1ObjRend.material = interactMAT; //Moused Over
 				news2ObjRend.material = news2ObjMAT;
 				news3ObjRend.material = news3ObjMAT;
 
-			} else if (playerScript.numNewsObj == 2.0f && playerScript.isInteract && !playerScript.newsChosen) {
+			} else if (playerScript.numNewsObj == 2.0f && playerScript.isInteract) {
 
 				news1ObjRend.material = news1ObjMAT;
 				news2ObjRend.material = interactMAT; //Moused Over
 				news3ObjRend.material = news3ObjMAT;
 
-			} else if (playerScript.numNewsObj == 3.0f && playerScript.isInteract && !playerScript.newsChosen) {
+			} else if (playerScript.numNewsObj == 3.0f && playerScript.isInteract) {
 
 				news1ObjRend.material = news1ObjMAT;
 				news2ObjRend.material = news2ObjMAT;
@@ -95,7 +96,7 @@ public class FixedCam : MonoBehaviour {
 			}
 
 
-		} else if (!fixedCamera.enabled && !playerScript.newsChosen) {
+		} else if (!fixedCamera.enabled) {
 
 			news1ObjRend.material = news1ObjMAT;
 			news2ObjRend.material = news2ObjMAT;
@@ -147,26 +148,36 @@ public class FixedCam : MonoBehaviour {
 	}
 
 	public void News1 () {
-		
-			//playerScript.newsChosen = true;
 
-			if (newsUIScript.isActive == false) {
-				
-				newsUIScript.OpenNews ();
-				
-			} else if (newsUIScript.isActive == true) {
-				
-				newsUIScript.CloseNews ();
-				
-			}
+		playerScript.evtScript.eventNum++;
+		done = true;
 
-			Debug.Log ("READING NEWSPAPER 1 HELLO");
-			//Destroy (news2Obj);
-			//Destroy (news3Obj);
+		//playerScript.newsChosen = true;
+
+		if (newsUIScript.isActive == false) {
+			
+			newsUIScript.OpenNews ();
+
+		} else if (newsUIScript.isActive == true) {
+			
+			newsUIScript.CloseNews ();
+
+		}
+
+		Debug.Log ("READING NEWSPAPER 1 HELLO");
+		news2Obj.SetActive (false);
+		news2ObjRend.enabled = false;
+		news3Obj.SetActive (false);
+		news3ObjRend.enabled = false;
+		//Destroy (news2Obj);
+		//Destroy (news3Obj);
 
 	}
 
 	public void News2 () {
+
+		playerScript.evtScript.eventNum++;
+		done = true;
 
 		//playerScript.newsChosen = true;
 
@@ -181,12 +192,19 @@ public class FixedCam : MonoBehaviour {
 		}
 
 		Debug.Log ("READING NEWSPAPER 2 HELLO");
+		news1Obj.SetActive (false);
+		news1ObjRend.enabled = false;
+		news3Obj.SetActive (false);
+		news3ObjRend.enabled = false;
 		//Destroy (news1Obj);
 		//Destroy (news3Obj);
 
 	}
 
 	public void News3 () {
+
+		playerScript.evtScript.eventNum++;
+		done = true;
 
 		//playerScript.newsChosen = true;
 
@@ -201,6 +219,10 @@ public class FixedCam : MonoBehaviour {
 		}
 
 		Debug.Log ("READING NEWSPAPER 3 HELLO");
+		news1Obj.SetActive (false);
+		news1ObjRend.enabled = false;
+		news2Obj.SetActive (false);
+		news2ObjRend.enabled = false;
 		//Destroy (news1Obj);
 		//Destroy (news2Obj);
 
